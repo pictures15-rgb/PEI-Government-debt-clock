@@ -1,0 +1,141 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PEI Government Debt Clock</title>
+<style>
+* { box-sizing:border-box }
+body {
+ margin:0;
+ padding:18px;
+ background:#050505;
+ color:white;
+ font-family:Arial,sans-serif;
+ text-align:center;
+}
+.clock {
+ max-width:900px;
+ margin:25px auto;
+ padding:25px 12px;
+ border:3px solid #444;
+ border-radius:12px;
+ background:linear-gradient(#1a1a1a,#050505);
+ box-shadow:0 0 30px #550000;
+}
+h1 {
+ font-size:clamp(22px,5vw,38px);
+ color:white;
+}
+.sub { color:#aaa;letter-spacing:2px }
+.label { color:#ccc;margin:22px 0 8px }
+.debt {
+ color:#ff2929;
+ font:bold clamp(27px,7vw,58px)
+ "Courier New",monospace;
+ text-shadow:0 0 12px red,0 0 24px #900;
+ overflow-wrap:anywhere;
+}
+.grid {
+ display:grid;
+ grid-template-columns:repeat(2,1fr);
+ gap:12px;
+ margin-top:25px;
+}
+.stat {
+ background:#171717;
+ border:1px solid #444;
+ padding:20px 8px;
+ border-radius:8px;
+}
+.stat small { color:#bbb }
+.value {
+ margin-top:10px;
+ color:#ff3838;
+ font:bold clamp(20px,4vw,32px)
+ "Courier New",monospace;
+ overflow-wrap:anywhere;
+}
+.note {
+ color:#aaa;
+ font-size:12px;
+ line-height:1.7;
+ margin-top:25px;
+}
+@media(max-width:450px) {
+ .grid { grid-template-columns:1fr }
+}
+</style>
+</head>
+<body>
+<div class="clock">
+<h1>🇨🇦 PEI GOVERNMENT</h1>
+<div class="sub">PRINCE EDWARD ISLAND</div>
+
+<div class="label">ESTIMATED PROVINCIAL NET DEBT</div>
+<div class="debt" id="debt">$0</div>
+
+<div class="grid">
+ <div class="stat">
+  <small>DEBT PER RESIDENT</small>
+  <div class="value" id="resident">$0</div>
+ </div>
+ <div class="stat">
+  <small>ESTIMATED ANNUAL INCREASE</small>
+  <div class="value">$708.3M</div>
+ </div>
+ <div class="stat">
+  <small>2026-27 DEFICIT FORECAST</small>
+  <div class="value">$459.3M</div>
+ </div>
+ <div class="stat">
+  <small>NET DEBT / GDP</small>
+  <div class="value">36.4%</div>
+ </div>
+</div>
+
+<div class="note">
+● LIVE ESTIMATED COUNTER<br>
+Official starting net debt: $3,694,700,000<br>
+Starting date: April 1, 2026<br>
+Forecast year-end net debt: $4,403,000,000<br>
+Population basis: 182,657 (July 2025)<br>
+This is an illustrative projection, not an
+official second-by-second debt measurement.<br>
+<div id="updated"></div>
+</div>
+</div>
+
+<script>
+const START_DEBT = 3694700000;
+const POPULATION = 182657;
+const ANNUAL_INCREASE = 708300000;
+const START_DATE = new Date("2026-04-01T00:00:00");
+
+function dollars(n) {
+ return "$" + Math.floor(n).toLocaleString("en-CA");
+}
+
+function updateClock() {
+ const elapsed = Math.max(
+  0,(Date.now()-START_DATE.getTime())/1000
+ );
+ const rate = ANNUAL_INCREASE/(365.25*86400);
+ const debt = START_DEBT + elapsed*rate;
+
+ document.getElementById("debt").textContent =
+  dollars(debt);
+
+ document.getElementById("resident").textContent =
+  dollars(debt/POPULATION);
+
+ document.getElementById("updated").textContent =
+  "Last screen update: "+new Date().toLocaleString();
+}
+
+updateClock();
+setInterval(updateClock,1000);
+</script>
+</body>
+</html>
